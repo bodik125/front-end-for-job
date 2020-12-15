@@ -19,7 +19,7 @@
       <div style="display: flex; flex-direction: column">
         <h2>Group</h2>
 
-        <select v-model="groupss" v-on:change="sorted('group')">
+        <select v-model="groupss" v-on:change="sorted('group', groupss)">
           <option
             v-for="group of groups"
             :key="group.name"
@@ -31,7 +31,7 @@
         </select>
       </div>
       <div>
-        <button v-on:click="sorted('phone')"><h2>Phone</h2></button>
+        <a v-on:click="sorted('phone')"><h2>Phone</h2></a>
       </div>
       <div>
         <h1>FilterBy</h1>
@@ -119,12 +119,13 @@ export default {
         // console.log(this.posts);
       });
     },
-    sorted(param) {
+    sorted(param, group) {
       switch (param) {
         case "name":
           return this.posts.sort((d1, d2)=> {return d1.name.toLowerCase() > d2.name.toLowerCase() ? 1 : -1});
         case "group":
-          return this.posts.sort((d1, d2)=> {return d1.group.toLowerCase() === d2.group.toLowerCase() ? 1 : -1})
+          return this.posts.sort((d1, d2)=> {
+            return d1.group !== group  ? 1 : -1})
         case "phone":
           return this.posts.sort((d1, d2)=>{  return (d1.phone > d2.phone) ? 1 : -1;})
         default:
@@ -166,15 +167,6 @@ export default {
     };
   },
   computed: {},
-};
-var sortByName = function (d1, d2) {
-  return d1.name.toLowerCase() > d2.name.toLowerCase() ? 1 : -1;
-};
-var sortByGroup = function (d1, d2) {
-  return d1.group.toLowerCase() > d2.group.toLowerCase() ? 1 : -1;
-};
-var sortByPhone = function (d1, d2) {
-  return d1.name > d2.phone ? 1 : -1;
 };
 </script>
 <style scoped>
