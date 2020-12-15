@@ -14,12 +14,12 @@
     </div>
     <div class="filters" style="display: flex; justify-content: space-around">
       <div>
-        <a href=""><h2>Name</h2></a>
+        <a v-on:click="sorted('name')"><h2>Name</h2></a>
       </div>
       <div style="display: flex; flex-direction: column">
-        <a href=""><h2>Group</h2></a>
-            
-        <select v-model="groupss" v-on:change="sortbygroup(groupss)" >
+        <h2>Group</h2>
+
+        <select v-model="groupss" v-on:change="sorted('group')">
           <option
             v-for="group of groups"
             :key="group.name"
@@ -31,7 +31,7 @@
         </select>
       </div>
       <div>
-        <a href=""><h2>Phone</h2></a>
+        <button v-on:click="sorted('phone')"><h2>Phone</h2></button>
       </div>
       <div>
         <h1>FilterBy</h1>
@@ -114,10 +114,22 @@ export default {
         method: "get",
         url: `https://test-project-for-job.herokuapp.com/posts/sortbygroup/${group}`,
       }).then((response) => {
-      console.log(response);
-      this.posts = response.data;
-      console.log(this.posts);
-    })
+        console.log(response.data);
+        this.posts = response.data;
+        // console.log(this.posts);
+      });
+    },
+    sorted(param) {
+      switch (param) {
+        case "name":
+          return this.posts.sort((d1, d2)=> {return d1.name.toLowerCase() > d2.name.toLowerCase() ? 1 : -1});
+        case "group":
+          return this.posts.sort((d1, d2)=> {return d1.group.toLowerCase() === d2.group.toLowerCase() ? 1 : -1})
+        case "phone":
+          return this.posts.sort((d1, d2)=>{  return (d1.phone > d2.phone) ? 1 : -1;})
+        default:
+          return this.phones;
+      }
     },
   },
   async mounted() {
@@ -141,12 +153,28 @@ export default {
       console.log(this.posts);
     });
   },
-  data() {
-    return { posts: [{}], groups: "", groupss: "" };
-  },
+
   components: {
     PostItem,
   },
+  data() {
+    return {
+      posts: [],
+      groups: "",
+      groupss: "",
+      sortParam: "",
+    };
+  },
+  computed: {},
+};
+var sortByName = function (d1, d2) {
+  return d1.name.toLowerCase() > d2.name.toLowerCase() ? 1 : -1;
+};
+var sortByGroup = function (d1, d2) {
+  return d1.group.toLowerCase() > d2.group.toLowerCase() ? 1 : -1;
+};
+var sortByPhone = function (d1, d2) {
+  return d1.name > d2.phone ? 1 : -1;
 };
 </script>
 <style scoped>
